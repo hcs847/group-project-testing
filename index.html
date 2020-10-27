@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Project 1</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div id="side-bar" class="col s12 l2">
+        <div id="search-stock" class="row">
+          <div class="input-field col s10">
+            <input placholder="Stock Symbol" id="stock" type="text" class="validate" />
+            <label for="stock-symbol">Stock</label>
+          </div>
+        </div>
+      </div>
+      <div class="col s12 l4">
+
+        <div class="card stock-card">
+          <table class="responsive-table">
+            <thead>
+              <tr class="company-info green-text">
+                <th>
+                  <div class="card-image company-logo" id="image-1">
+                </th>
+              </tr>
+            </thead>
+          </table>
+
+          <div class="card-content card-content black white-text text-lighten-5" id="content-1">
+            <table class="responsive-table">
+
+              <tbody>
+                <tr class="stock-current">
+                  <td>Current Price:</td>
+                </tr>
+                <tr class="stock-previous">
+                  <td>Previous Close Price:</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- temporarily hard coding for testing -->
+      <div class="col s12 l4">
+        <div class="card stock-card">
+          <table class="responsive-table">
+            <thead>
+              <tr class="company-info green-text">
+                <th>
+                  <div class="card-image company-logo">
+                    <div class="card-image" id="image-2">
+                      <img src="https://static.finnhub.io/logo/87cb30d8-80df-11ea-8951-00000000092a.png"
+                        class="responsive-img" alt="" /></div>
+                </th>
+                <th>Apple Inc</th>
+                <th>AAPL</th>
+              </tr>
+            </thead>
+          </table>
+          <a class="btn-small btn-floating halfway-fab waves-effect waves-light red"><i
+              class="small material-icons">add</i></a>
+          <div class="card-content black white-text" id="content-2">
+            <table class="responsive-table">
+              <tbody>
+                <tr>
+                  <td>Current Price:</td>
+                  <td>116.60</td>
+                </tr>
+                <tr>
+                  <td>Open Price:</td>
+                  <td>115.49</td>
+                </tr>
+                <tr>
+                  <td>High Price:</td>
+                  <td>117.28</td>
+                </tr>
+                <tr>
+                  <td>Low Price:</td>
+                  <td>114.54</td>
+                </tr>
+                <tr>
+                  <td>Previous Close Price:</td>
+                  <td>115.04</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
