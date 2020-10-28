@@ -26,7 +26,8 @@ var getNewsData = function () {
     fetch("https://finnhub.io/api/v1/company-news?symbol=AMZN&from=2020-10-26&to=2020-10-26&source=marketwatch&token=bubka1v48v6ouqkj675g").then(function (response) {
         response.json().then(function (data) {
             console.log("Second API call: ", data[0]);
-
+            //todayQuoteEl.innerHTML = "<img src='" + data[0].image + "'alt='news'>";
+            //data[0].headline
         })
     })
 };
