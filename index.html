@@ -15,10 +15,16 @@
     <div class="row">
       <div id="side-bar" class="col s12 l2">
         <div id="search-stock" class="row">
-          <div class="input-field col s10">
-            <input placholder="Stock Symbol" id="stock" type="text" class="validate" />
-            <label for="stock-symbol">Stock</label>
-          </div>
+          <form>
+            <div class="input-field inline col s10">
+              <input id="search" type="search" required>
+              <label class="label-icon" for="search">
+                <i class="material-icons">search</i>
+              </label>
+              <i class="material-icons">close</i>
+            </div>
+
+          </form>
         </div>
       </div>
       <div class="col s12 l4">
@@ -100,6 +106,7 @@
     </div>
   </div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="script.js"></script>
 </body>
