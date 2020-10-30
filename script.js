@@ -1,5 +1,6 @@
+// Element variable declartions
+
 var stockCardEl = document.querySelector(".stock-card")
-var todayQuoteEl = document.querySelector("#image-1");
 var companyInfoEl = document.querySelector(".company-info");
 var stockCurrentEl = document.querySelector(".stock-current");
 var stockPreviousEl = document.querySelector(".stock-previous");
@@ -40,21 +41,6 @@ var getRapidApiNews = function () {
     })
 }
 
-var getStockPrices = function () {
-    fetch("https://finnhub.io/api/v1/quote?symbol=AMZN&token=bubka1v48v6ouqkj675g").then(function (response) {
-        response.json().then(function (data) {
-            console.log("First API call: ", data);
-            var currentPriceEl = document.createElement("td");
-            currentPriceEl.textContent = Math.round(data.c * 100) / 100;
-            stockCurrentEl.appendChild(currentPriceEl);
-
-            var previousPriceEl = document.createElement("td");
-            previousPriceEl.textContent = Math.round(data.pc * 100) / 100;
-            stockPreviousEl.appendChild(previousPriceEl);
-
-        })
-    })
-};
 
 // dynamically render dates based on user's input
 var getNewsData = function () {
@@ -70,35 +56,91 @@ var getNewsData = function () {
     })
 };
 
-var getCompanyData = function () {
-    fetch("https://finnhub.io/api/v1/stock/profile2?symbol=AMZN&token=bubka1v48v6ouqkj675g").then(function (response) {
+var getStockPrices = function (stockTicker) {
+    fetch("https://finnhub.io/api/v1/quote?symbol="+stockTicker+"&token=bubka1v48v6ouqkj675g").then(function (response) {
         response.json().then(function (data) {
-            console.log("third API call: ", data, data.name, data.ticker);
-            todayQuoteEl.innerHTML = "<img src='" + data.logo + "' class='responsive-img' alt='logo'>";
-            // button to add to favorite -- add event listner
-            addToWatchedEl.classList = "btn-small btn-floating halfway-fab waves-effect waves-light red";
-            addToWatchedEl.innerHTML = "<i class ='small material-icons'>add</i>";
-            stockCardEl.appendChild(addToWatchedEl);
+            console.log("First API call: ", data);
+            stockCurrentEl.innerHTML = "";
+            var currentPriceEl = document.createElement("td");
+            currentPriceEl.textContent = Math.round(data.c * 100) / 100;
+            stockCurrentEl.appendChild(currentPriceEl);
 
-            var nameEl = document.createElement("th");
-            nameEl.textContent = data.name;
-            companyInfoEl.appendChild(nameEl);
 
-            var symbolEl = document.createElement("th");
-            symbolEl.textContent = data.ticker;
-            companyInfoEl.appendChild(symbolEl);
-
-            var webUrlEl = document.createElement("td");
-            webUrlEl.innerHTML = "<a href='" + data.weburl + "'>" + data.name;
-            companyUrlEl.appendChild(webUrlEl);
-
-            getStockPrices();
+            stockPreviousEl.innerHTML="";
+            var previousPriceEl = document.createElement("td");
+            previousPriceEl.textContent = Math.round(data.pc * 100) / 100;
+            stockPreviousEl.appendChild(previousPriceEl);
 
         })
     })
 };
 
-getCompanyData();
+// This Function is called when search is clicked.
+// This is dynamically run with the value of the #search field elemnet
+
+var getCompanyData = function (stockTicker) {
+    fetch("https://finnhub.io/api/v1/stock/profile2?symbol=" + stockTicker + "&token=bubka1v48v6ouqkj675g"
+    )
+        .then(function (stockResponse) {
+            return stockResponse.json();
+        })
+        .then(function (data) {
+            // initializing the innerHTMLs of all elements
+            companyInfoEl.innerHTML= "";
+            companyUrlEl.innerHTML="";
+
+            // button to add to favorite -- add event listner *******NICE TO HAVE add later***********
+            // addToWatchedEl.classList = "btn-small btn-floating halfway-fab waves-effect waves-light red";
+            // addToWatchedEl.innerHTML = "<i class ='small material-icons'>add</i>";
+            // stockCardEl.appendChild(addToWatchedEl);
+
+            //getting the company logo
+            var companyLogoEl = document.createElement("th")
+            companyLogoEl.setAttribute('class','card-image company-logo')
+            var logoImgEl = document.createElement("img");
+            logoImgEl.setAttribute('src',data.logo);
+            logoImgEl.setAttribute('class','responsive-img');
+            logoImgEl.setAttribute('alt', 'logo');
+            companyLogoEl.append(logoImgEl);
+            companyInfoEl.appendChild(companyLogoEl);
+
+            //Display Company Name
+            var nameEl = document.createElement("th");
+            nameEl.setAttribute('style', 'text-align: center')
+            nameEl.textContent = data.name;
+            companyInfoEl.appendChild(nameEl);
+
+            //Display Stock Ticker
+            var symbolEl = document.createElement("th");
+            symbolEl.textContent = data.ticker;
+            companyInfoEl.appendChild(symbolEl);
+
+            //function to generate the current and Open price
+            getStockPrices(stockTicker);
+
+            //Display Website URL 
+            var webUrlEl = document.createElement("td");
+            webUrlEl.innerHTML = "<a href='" + data.weburl + "'>" + data.name;
+            companyUrlEl.appendChild(webUrlEl);
+        })
+};
+
+
+// Event Listener for the search icon, when clicked will run the getCompanyData function to display stock information.
+
+$(document).on('click', '.search-icon', function(){
+    // getting the search value. 
+    var stockTicker = document.querySelector("#search").value;
+    getCompanyData(stockTicker);
+    // add function for getting stock news
+    // getNewsData(); 
+});
+
+
+// This shows up as default on the page before the page is cleared to have a search result. 
+getCompanyData('AAPL');
+// getCompanyData('AMZN');
+// getCompanyData('MSFT');
 // getNewsData(); 
 getRapidApiNews();
 
