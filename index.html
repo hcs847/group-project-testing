@@ -13,7 +13,7 @@
 <body>
   <div class="container">
     <div class="row">
-      <div id="side-bar" class="col s12 l2">
+      <div id="side-bar" class="col s12 l1">
         <div id="search-stock" class="row">
           <form>
             <div class="input-field inline col s10">
@@ -40,7 +40,7 @@
             </thead>
           </table>
 
-          <div class="card-content card-content black white-text text-lighten-5" id="content-1">
+          <div class="card-content card-content grey darken-4 white-text text-lighten-5" id="content-1">
             <table class="responsive-table">
 
               <tbody>
@@ -49,6 +49,9 @@
                 </tr>
                 <tr class="stock-previous">
                   <td>Previous Close Price:</td>
+                </tr>
+                <tr class="website">
+                  <td>Company's website:</td>
                 </tr>
               </tbody>
             </table>
@@ -66,7 +69,8 @@
                   <div class="card-image company-logo">
                     <div class="card-image" id="image-2">
                       <img src="https://static.finnhub.io/logo/87cb30d8-80df-11ea-8951-00000000092a.png"
-                        class="responsive-img" alt="" /></div>
+                        class="responsive-img" alt="" />
+                    </div>
                 </th>
                 <th>Apple Inc</th>
                 <th>AAPL</th>
@@ -75,7 +79,7 @@
           </table>
           <a class="btn-small btn-floating halfway-fab waves-effect waves-light red"><i
               class="small material-icons">add</i></a>
-          <div class="card-content black white-text" id="content-2">
+          <div class="card-content grey darken-4 white-text" id="content-2">
             <table class="responsive-table">
               <tbody>
                 <tr>
@@ -83,27 +87,25 @@
                   <td>116.60</td>
                 </tr>
                 <tr>
-                  <td>Open Price:</td>
-                  <td>115.49</td>
-                </tr>
-                <tr>
-                  <td>High Price:</td>
-                  <td>117.28</td>
-                </tr>
-                <tr>
-                  <td>Low Price:</td>
-                  <td>114.54</td>
-                </tr>
-                <tr>
                   <td>Previous Close Price:</td>
                   <td>115.04</td>
+                </tr>
+                <tr class="website">
+                  <td>Company's website:</td>
+                  <td><a href="https://www.apple.com/">Apple Inc</a></td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
+      </div> <!-- end of second card -->
+
+      <div class="col s12 l3 news-feed">
+        <h4 class="text-float">News Feed</h4>
       </div>
-    </div>
+    </div> <!-- end of news col -->
+  </div>
+  </div> <!-- end of row -->
   </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
