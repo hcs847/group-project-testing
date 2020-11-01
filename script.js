@@ -1,5 +1,5 @@
 // Element variable declartions
-var stockCardEl = document.querySelector(".stock-card")
+var stockCardEl = document.querySelector(".stock-card");
 var companyInfoEl = document.querySelector(".company-info");
 var stockCurrentEl = document.querySelector(".stock-current");
 var stockPreviousEl = document.querySelector(".stock-previous");
@@ -10,13 +10,16 @@ var addToWatchedEl = document.createElement("a");
 
 // getting data from localStorage or default values
 var stockTickers = JSON.parse(localStorage.getItem("stock-tickers")) || [];
-var stockTickersDefault = ['APPL'];
+var stockTickersDefault = ["APPL"];
 
 var displayPreviousStockTickers = function (stockTickers) {
+    var previousStockTickerUl = document.createElement("ul");
     for (var i = 0; i < stockTickers.length; i++) {
-        var previousStockTicker = document.createElement("ul");
-        previousStockTicker.innerHTML = "<li>" + stockTickers[i] + "</li>";
-        previousStockTickersEl.appendChild(previousStockTicker);
+        var previousStockTickerLi = document.createElement("li");
+        // previousStockTickerLi.classList = "active";
+        previousStockTickerLi.innerHTML = '<a href="#">' + stockTickers[i] + "</a>";
+        previousStockTickersEl.appendChild(previousStockTickerUl);
+        previousStockTickerUl.appendChild(previousStockTickerLi);
     }
 };
 
@@ -32,18 +35,17 @@ var storeStockTickers = function (stockTicker) {
     // TO DO: add limit of 10 tickers
 };
 
-
-
-
 // calling bloomberg market new end point through rapidapi to render at the botton of the page
 var getRapidApiNews = function () {
-    fetch("https://bloomberg-market-and-financial-news.p.rapidapi.com/stories/list?template=STOCK&id=usdjpy", {
-        "method": "GET",
-        "headers": {
-            "x-rapidapi-host": "bloomberg-market-and-financial-news.p.rapidapi.com",
-            "x-rapidapi-key": "8a1f46e1d8msh570b0c0e9eeb024p19ee6bjsn73741d7971e8"
+    fetch(
+        "https://bloomberg-market-and-financial-news.p.rapidapi.com/stories/list?template=STOCK&id=usdjpy", {
+            method: "GET",
+            headers: {
+                "x-rapidapi-host": "bloomberg-market-and-financial-news.p.rapidapi.com",
+                "x-rapidapi-key": "8a1f46e1d8msh570b0c0e9eeb024p19ee6bjsn73741d7971e8",
+            },
         }
-    }).then(function (response) {
+    ).then(function (response) {
         response.json().then(function (data) {
             console.log("this is rapidApi: ", data.stories);
             if (data.stories) {
@@ -54,36 +56,53 @@ var getRapidApiNews = function () {
 
                     var newsImageEl = document.createElement("div");
                     newsImageEl.classList = "card-stacked small col s2";
-                    newsImageEl.innerHTML = "<div class='card-image article-image'><img src='" +
-                        newsImage + "' class='responsive-img'/></div>";
+                    newsImageEl.innerHTML =
+                        "<div class='card-image article-image'><img src='" +
+                        newsImage +
+                        "' class='responsive-img'/></div>";
 
                     var newsTitleEl = document.createElement("div");
                     newsTitleEl.classList = "action-card article-link";
-                    newsTitleEl.innerHTML = "<a href='" + newsUrl + "' target='_blank'>" + newsHeadline + "</a>";
+                    newsTitleEl.innerHTML =
+                        "<a class='black-text' href='" +
+                        newsUrl +
+                        "' target='_blank'>" +
+                        newsHeadline +
+                        "</a>";
                     newsImageEl.appendChild(newsTitleEl);
                     newsFeedEl.appendChild(newsImageEl);
                 }
             }
-        })
-    })
-}
+        });
+    });
+};
 
 // TO DO: dynamically render dates based on user's input
 var getNewsData = function () {
-    fetch("https://finnhub.io/api/v1/company-news?symbol=AMZN&from=2020-10-26&to=2020-10-26&source='https://www.forbes.com'&token=bubka1v48v6ouqkj675g").then(function (response) {
+    fetch(
+        "https://finnhub.io/api/v1/company-news?symbol=AMZN&from=2020-10-26&to=2020-10-26&source='https://www.forbes.com'&token=bubka1v48v6ouqkj675g"
+    ).then(function (response) {
         response.json().then(function (data) {
             console.log("Company News API call: ", data, data[0].headline);
             var stockNewsEl = document.createElement("div");
             stockNewsEl.classList = "card-image";
-            stockNewsEl.innerHTML = "<img class='responsiv-img' src='" + data[0].image + "' alt='news'><span class='card-title>" + data[0].headline + '</span>';
+            stockNewsEl.innerHTML =
+                "<img class='responsiv-img' src='" +
+                data[0].image +
+                "' alt='news'><span class='card-title>" +
+                data[0].headline +
+                "</span>";
             stockCardEl.appendChild(stockNewsEl);
-
-        })
-    })
+        });
+    });
 };
 
 var getStockPrices = function (stockTicker) {
-    fetch("https://finnhub.io/api/v1/quote?symbol=" + stockTicker + "&token=bubka1v48v6ouqkj675g").then(function (response) {
+    fetch(
+        "https://finnhub.io/api/v1/quote?symbol=" +
+        stockTicker +
+        "&token=bubka1v48v6ouqkj675g"
+    ).then(function (response) {
         response.json().then(function (data) {
             // console.log("Stock Prices API call: ", data);
 
@@ -102,16 +121,19 @@ var getStockPrices = function (stockTicker) {
 
             // save stock ticker in local storage
             storeStockTickers(stockTicker);
-
-        })
-    })
+        });
+    });
 };
 
 // This Function is called when search is clicked.
 // This is dynamically run with the value of the #search field elemnet
 
 var getCompanyData = function (stockTicker) {
-    fetch("https://finnhub.io/api/v1/stock/profile2?symbol=" + stockTicker + "&token=bubka1v48v6ouqkj675g")
+    fetch(
+            "https://finnhub.io/api/v1/stock/profile2?symbol=" +
+            stockTicker +
+            "&token=bubka1v48v6ouqkj675g"
+        )
         .then(function (stockResponse) {
             return stockResponse.json();
         })
@@ -122,24 +144,24 @@ var getCompanyData = function (stockTicker) {
             companyInfoEl.innerHTML = "";
             companyUrlEl.innerHTML = "";
 
-            // button to add to favorite -- add event listner *******NICE TO HAVE add later***********
+            // TBD: ----> button to add to favorite -- add event listner *******NICE TO HAVE add later***********
             // addToWatchedEl.classList = "btn-small btn-floating halfway-fab waves-effect waves-light red";
             // addToWatchedEl.innerHTML = "<i class ='small material-icons'>add</i>";
             // stockCardEl.appendChild(addToWatchedEl);
 
             //getting the company logo
-            var companyLogoEl = document.createElement("th")
-            companyLogoEl.setAttribute('class', 'card-image company-logo')
+            var companyLogoEl = document.createElement("th");
+            companyLogoEl.setAttribute("class", "card-image company-logo");
             var logoImgEl = document.createElement("img");
-            logoImgEl.setAttribute('src', data.logo);
-            logoImgEl.setAttribute('class', 'responsive-img');
-            logoImgEl.setAttribute('alt', 'logo');
+            logoImgEl.setAttribute("src", data.logo);
+            logoImgEl.setAttribute("class", "responsive-img");
+            logoImgEl.setAttribute("alt", "logo");
             companyLogoEl.append(logoImgEl);
             companyInfoEl.appendChild(companyLogoEl);
 
             //Display Company Name
             var nameEl = document.createElement("th");
-            nameEl.setAttribute('style', 'text-align: center')
+            nameEl.setAttribute("style", "text-align: center");
             nameEl.textContent = data.name;
             companyInfoEl.appendChild(nameEl);
 
@@ -154,26 +176,25 @@ var getCompanyData = function (stockTicker) {
 
             // console.log(stockTicker);
 
-            //Display Website URL 
+            //Display Website URL
             var webUrlEl = document.createElement("td");
             webUrlEl.innerHTML = "<a href='" + data.weburl + "'>" + data.name;
             companyUrlEl.appendChild(webUrlEl);
-        })
+        });
 };
 
 // rendering stored list of stock tickers from local storage, starting with one value
 var renderStoredStockTickers = function (i = 0) {
-
     if (stockTickers.length === 0) {
         //for (var i = 0; i < stockTickersDefault.length; i++) {
         getCompanyData(stockTickersDefault[i]);
         //}
     } else {
         //for (var i = 0; i < stockTickers.length; i++) {
-        getCompanyData(stockTickers[i])
+        getCompanyData(stockTickers[i]);
         //}
     }
-}
+};
 
 renderStoredStockTickers();
 
@@ -184,30 +205,32 @@ var previousStockTickersHandler = function (event) {
 
 // Event Listener for the search icon, when clicked will run the getCompanyData function to display stock information.
 
-$(document).on('click', '.search-icon', function () {
-    // getting the search value. 
+$(document).on("click", ".search-icon", function () {
+    // getting the search value.
     var stockTicker = document.querySelector("#search").value;
-    console.log("this is from click: ", stockTicker)
+    console.log("this is from click: ", stockTicker);
     getCompanyData(stockTicker);
 
     // add function for getting stock news
-    // getNewsData(); 
+    // getNewsData();
 });
 
 // render stock clicked from previous searched side-nav
 previousStockTickersEl.addEventListener("click", previousStockTickersHandler);
 
-
-// This shows up as default on the page before the page is cleared to have a search result. 
+// This shows up as default on the page before the page is cleared to have a search result.
 //getCompanyData('AAPL');
 // getCompanyData('AMZN');
 // getCompanyData('TSLA');
-// getNewsData(); 
+// getNewsData();
 
 getRapidApiNews();
 
-
-// initliaze interactive elements materialize
+// initliaze interactive elements for Materialize
 $(document).ready(function () {
-    $('.sidenav').sidenav();
+    $(".sidenav").sidenav();
+});
+
+$(document).ready(function () {
+    $(".parallax").parallax();
 });
