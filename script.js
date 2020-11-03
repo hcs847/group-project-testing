@@ -12,7 +12,7 @@ var addToWatchedEl = document.createElement("a");
 
 // getting data from localStorage or default values
 var stockTickers = JSON.parse(localStorage.getItem("stock-tickers")) || [];
-var stockTickersDefault = ['APPL'];
+var stockTickersDefault = ['AAPL'];
 
 var displayPreviousStockTickers = function (stockTickers) {
     for (var i = 0; i < stockTickers.length; i++) {
@@ -33,9 +33,6 @@ var storeStockTickers = function (stockTicker) {
     }
     // TO DO: add limit of 10 tickers
 };
-
-
-
 
 // calling bloomberg market new end point through rapidapi to render at the botton of the page
 var getRapidApiNews = function () {
@@ -137,48 +134,58 @@ var getCompanyData = function (stockTicker) {
             return stockResponse.json();
         })
         .then(function (data) {
+            if (data.name ==undefined || data.name == null|| data.name== "" ){
+                console.log("data is empty")
+                $('#error-msg').empty();
+                var errorMsg = $('#error-msg')
+                var displayError = document.createElement('p');
+                displayError.setAttribute('style','color:red');
+                displayError.innerHTML = "Please enter a valid Stock Ticker";
+                errorMsg.append(displayError);
+            }else{
             // initializing the innerHTMLs of all elements
 
-            // TEMPORARILY COMMENTING OUT
-            companyInfoEl.innerHTML = "";
-            companyUrlEl.innerHTML = "";
+                companyInfoEl.innerHTML = "";
+                companyUrlEl.innerHTML = "";
+                $('#error-msg').empty();
 
-            // button to add to favorite -- add event listner *******NICE TO HAVE add later***********
-            // addToWatchedEl.classList = "btn-small btn-floating halfway-fab waves-effect waves-light red";
-            // addToWatchedEl.innerHTML = "<i class ='small material-icons'>add</i>";
-            // stockCardEl.appendChild(addToWatchedEl);
+                // button to add to favorite -- add event listner *******NICE TO HAVE add later***********
+                // addToWatchedEl.classList = "btn-small btn-floating halfway-fab waves-effect waves-light red";
+                // addToWatchedEl.innerHTML = "<i class ='small material-icons'>add</i>";
+                // stockCardEl.appendChild(addToWatchedEl);
 
-            //getting the company logo
-            var companyLogoEl = document.createElement("th")
-            companyLogoEl.setAttribute('class', 'card-image company-logo')
-            var logoImgEl = document.createElement("img");
-            logoImgEl.setAttribute('src', data.logo);
-            logoImgEl.setAttribute('class', 'responsive-img');
-            logoImgEl.setAttribute('alt', 'logo');
-            companyLogoEl.append(logoImgEl);
-            companyInfoEl.appendChild(companyLogoEl);
+                //getting the company logo
+                var companyLogoEl = document.createElement("th")
+                companyLogoEl.setAttribute('class', 'card-image company-logo')
+                var logoImgEl = document.createElement("img");
+                logoImgEl.setAttribute('src', data.logo);
+                logoImgEl.setAttribute('class', 'responsive-img');
+                logoImgEl.setAttribute('alt', 'logo');
+                companyLogoEl.append(logoImgEl);
+                companyInfoEl.appendChild(companyLogoEl);
 
-            //Display Company Name
-            var nameEl = document.createElement("th");
-            nameEl.setAttribute('style', 'text-align: center')
-            nameEl.textContent = data.name;
-            companyInfoEl.appendChild(nameEl);
+                //Display Company Name
+                var nameEl = document.createElement("th");
+                nameEl.setAttribute('style', 'text-align: center')
+                nameEl.textContent = data.name;
+                companyInfoEl.appendChild(nameEl);
 
-            //Display Stock Ticker
+                //Display Stock Ticker
 
-            var symbolEl = document.createElement("th");
-            symbolEl.textContent = data.ticker;
-            companyInfoEl.appendChild(symbolEl);
+                var symbolEl = document.createElement("th");
+                symbolEl.textContent = data.ticker;
+                companyInfoEl.appendChild(symbolEl);
 
-            //function to generate the current and Open price
-            getStockPrices(stockTicker);
+                //function to generate the current and Open price
+                getStockPrices(stockTicker);
 
-            // console.log(stockTicker);
+                // console.log(stockTicker);
 
-            //Display Website URL 
-            var webUrlEl = document.createElement("td");
-            webUrlEl.innerHTML = "<a href='" + data.weburl + "'>" + data.name;
-            companyUrlEl.appendChild(webUrlEl);
+                //Display Website URL 
+                var webUrlEl = document.createElement("td");
+                webUrlEl.innerHTML = "<a href='" + data.weburl + "'>" + data.name;
+                companyUrlEl.appendChild(webUrlEl);
+            }
         })
 };
 
@@ -211,6 +218,7 @@ $(document).on('click', '.search-icon', function () {
     console.log("this is from click: ", stockTicker)
     getCompanyData(stockTicker);
 
+
     // add function for getting stock news
     getNewsData(stockTicker); 
 });
@@ -220,7 +228,7 @@ previousStockTickersEl.addEventListener("click", previousStockTickersHandler);
 
 
 // This shows up as default on the page before the page is cleared to have a search result. 
-//getCompanyData('AAPL');
+getCompanyData('AAPL');
 // getCompanyData('AMZN');
 // getCompanyData('TSLA');
 // getNewsData(); 
@@ -240,8 +248,8 @@ var displayNewsData = function(data)
 
     var results = data.list;
     //debugger;
-    alert("successful");
-    debugger;
+    // alert("successful");
+    // debugger;
     stockNewsEl.innerHTML = "";
     if (data.length === 0) 
     {
