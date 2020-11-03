@@ -33,20 +33,31 @@
   width: 3vw;
 }
 
+.company-info {
+  font-weight: 700;
+  font-size: larger;
+}
+
 .card .card-content {
   padding: 0.6rem 1rem;
   margin-top: 0.1rem;
 }
 
-.article-link {
-  font-size: smaller;
-  margin: 0 0 1rem 0;
-  line-height: 1.1;
+.article-link a {
+  padding: 0;
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0d47a1;
+}
+
+.article-image img {
   max-width: 80%;
 }
 
-.article-image {
-  max-width: 80%;
+.white p {
+  margin: 0;
+  padding: 0;
 }
 
 .news-feed h4 {
@@ -93,11 +104,23 @@
   margin: 0 0 0 6px;
 }
 
+.stock-news-title {
+  margin: 0.1rem;
+  padding: 0.1rem;
+}
+
+footer {
+  padding-left: 200px;
+}
 
 
 /* offsetting sidenav fixed width */
 @media only screen and (max-width: 992px) {
   .my-container {
+    padding-left: 0;
+  }
+
+  footer {
     padding-left: 0;
   }
 }

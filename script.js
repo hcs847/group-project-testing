@@ -52,7 +52,7 @@ var getRapidApiNews = function () {
         }
     ).then(function (response) {
         response.json().then(function (data) {
-            // console.log("this is rapidApi: ", data.stories);
+
             if (data.stories) {
                 for (var i = 0; i < 6; i++) {
                     var newsImage = data.stories[i].thumbnailImage;
@@ -60,14 +60,14 @@ var getRapidApiNews = function () {
                     var newsUrl = data.stories[i].shortURL;
 
                     var newsImageEl = document.createElement("div");
-                    newsImageEl.classList = "card-stacked small col s2";
+                    newsImageEl.classList = "col s6 m6 l4";
                     newsImageEl.innerHTML =
-                        "<div class='card-image article-image'><img src='" +
+                        "<div class='col s4 m4 l4'><img src='" +
                         newsImage +
                         "' class='responsive-img'/></div>";
 
                     var newsTitleEl = document.createElement("div");
-                    newsTitleEl.classList = "action-card article-link";
+                    newsTitleEl.classList = "col s8 m8 l8 article-link";
                     newsTitleEl.innerHTML =
                         "<a class='black-text' href='" +
                         newsUrl +
@@ -180,8 +180,8 @@ var getCompanyData = function (stockTicker) {
             getStockPrices(data.ticker);
 
             // Display Website URL
-            var webUrlEl = document.createElement("pa");
-            webUrlEl.innerHTML = "<a href='" + data.weburl + "'>" + data.name + "</a>";
+            var webUrlEl = document.createElement("p");
+            webUrlEl.innerHTML = "<a href='" + data.weburl + "' target='_blank'>" + data.name + "</a>";
             companyUrlEl.appendChild(webUrlEl);
 
             // save stock ticker in local storage as per extracted from api not as typed
@@ -194,10 +194,12 @@ var renderStoredStockTickers = function (i = 0) {
     if (stockTickers.length === 0) {
         //for (var i = 0; i < stockTickersDefault.length; i++) {
         getCompanyData(stockTickersDefault[i]);
+        getNewsData(stockTickersDefault[i]);
         //}
     } else {
         //for (var i = 0; i < stockTickers.length; i++) {
         getCompanyData(stockTickers[i]);
+        getNewsData(stockTickers[i]);
         //}
     }
 };
@@ -207,6 +209,9 @@ var previousStockTickersHandler = function (event) {
 
     // calling function to render previously searched tickers on click event
     getCompanyData(stockTickerSelected);
+
+    // calling the stock news function to render stock news
+    getNewsData(stockTickerSelected);
 };
 
 // calling function to display previously searched stock
@@ -255,12 +260,26 @@ var displayNewsData = function (data) {
         stockNewsEl.textContent = "No data found.";
         return;
     }
+
+    // filter results to including images
+    var filteredData = data.filter(function (article) {
+        return article.image;
+    });
+
+    // rendering stock news title
+    var newsTitleEl = document.createElement("div");
+    newsTitleEl.classList = "col s12 m12 l12 white-text blue-grey darken-4 stock-news-title center";
+    newsTitleEl.innerHTML = "<h4>Stock News</h4>";
+    stockNewsEl.appendChild(newsTitleEl);
+
     for (var i = 0; i < 4; i++) {
+        // checking if image is available
+
         var newsEl = document.createElement("div");
         newsEl.classList = "row white";
         // newsEl.classList = "card-image company-logo";
         //stockNewsEl.classList = "card-img-top";
-        newsEl.innerHTML = "<div class='col s4 m4 l4'><img class='responsive-img' src='" + data[i].image + "' alt='news'></div>";
+        newsEl.innerHTML = "<div class='col s4 m4 l4 article-image'><img class='responsive-img' src='" + filteredData[i].image + "' alt='news'></div>";
         //stockNewsEl.appendChild(newsEl);
         stockNewsEl.appendChild(newsEl);
 
@@ -268,7 +287,7 @@ var displayNewsData = function (data) {
         stockNewsUrlEl.classList = "col s8 m8 l8 white";
         //newsEl.append(newsUrlEl);
         // var newsUrlEl = document.createElement("p");
-        stockNewsUrlEl.innerHTML = "<p><a class='black-text' href='" + data[i].url + "'>" + data[i].headline + '</a></p>';
+        stockNewsUrlEl.innerHTML = "<p class='article-link'><a href='" + filteredData[i].url + "'>" + filteredData[i].headline + '</a></p>';
         newsEl.appendChild(stockNewsUrlEl);
 
 
