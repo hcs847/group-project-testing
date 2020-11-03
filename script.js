@@ -5,7 +5,7 @@ var stockCurrentEl = document.querySelector(".stock-current");
 var stockPreviousEl = document.querySelector(".stock-previous");
 var companyUrlEl = document.querySelector(".website");
 var newsFeedEl = document.querySelector(".news-feed");
-var stockNewsEl = ocument.querySelector(".newsData");
+var stockNewsEl = document.querySelector("newsData");
 
 var previousStockTickersEl = document.querySelector(".search-results");
 var addToWatchedEl = document.createElement("a");
@@ -74,21 +74,22 @@ var getRapidApiNews = function () {
 var getNewsData = function (stockTicker) {
     var st = stockTicker;
     let now = moment();
-    debugger;
+    //debugger;
     var mainDate = now.format("YYYY-MM-DD");
     //var mainDate = moment('today', 'YYYY-MM-DD');
-    var oldDate = moment().subtract('days', 7).format('YYYY-DD-MM');
-    var newsURL = "https://finnhub.io/api/v1/company-news?symbol=st&from=oldDate&to=mainDate&token=bufqlff48v6veg4jhmcg";
+    var oldDate = moment().subtract('days', 7).format('YYYY-MM-DD');
+    var newsURL = "https://finnhub.io/api/v1/company-news?symbol=" + stockTicker + "&from=" + oldDate + "&to=" + mainDate + "&token=bufqlff48v6veg4jhmcg";
+    alert (newsURL);
     fetch(newsURL)
        .then(function(response) 
          {
             if (response.ok) 
            {
-               response.json().then(function(data) 
-                {
-                    alert("successful");
-                    displayNewsData();
-                    });
+            response.json().then(function(data){
+                    //alert("successful");
+                //console.log(data);
+                displayNewsData(data);
+                });
            } 
            else 
            {
@@ -235,17 +236,27 @@ $(document).ready(function () {
 //display 5 day forecast
 var displayNewsData = function(data)
  {
-    //var results = data.list;
+    //console.log(data);
+
+    var results = data.list;
+    //debugger;
+    //alert("successful");
+    stockCardEl.innerHTML = "";
     if (data.length === 0) 
     {
-        repoContainerEl.textContent = "No data found.";
+        stockNewsEl.textContent = "No data found.";
         return;
     }
-    for (var i = 0; i < data.length; i++) 
+    for (var i = 0; i < 4; i++) 
     {
     var stockNewsEl = document.createElement("div");
-                    stockNewsEl.classList = "card-image";
-                    stockNewsEl.innerHTML = "<img class='responsiv-img' src='" + data[0].image + "' alt='news'><span class='card-title>" + data[0].headline + '</span>';
+                    //stockNewsEl.classList = "card-img-top";
+                    stockNewsEl.innerHTML = "<img class='responsiv-img' src='" + data[i].image + "' alt='news'><span class='card-title>" + data[i].headline + '</span>';
                     stockCardEl.appendChild(stockNewsEl);
+    //var stockNewsBodyEL =  document.createElement("div");
+                    //stockNewsBodyEL.classList = "card-img-top";               
+                    var newsUrlEl = document.createElement("p");
+                    newsUrlEl.innerHTML = "<a href='" + data[i].url + "'>";
+                    stockCardEl.appendChild(newsUrlEl);
     }
  }
