@@ -287,7 +287,7 @@ var displayNewsData = function (data) {
         stockNewsUrlEl.classList = "col s8 m8 l8 white";
         //newsEl.append(newsUrlEl);
         // var newsUrlEl = document.createElement("p");
-        stockNewsUrlEl.innerHTML = "<p class='article-link'><a href='" + filteredData[i].url + "'>" + filteredData[i].headline + '</a></p>';
+        stockNewsUrlEl.innerHTML = "<p class='article-link'><a href='" + filteredData[i].url + "' target='_blank'>" + filteredData[i].headline + '</a></p>';
         newsEl.appendChild(stockNewsUrlEl);
 
 
