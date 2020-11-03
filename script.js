@@ -5,7 +5,8 @@ var stockCurrentEl = document.querySelector(".stock-current");
 var stockPreviousEl = document.querySelector(".stock-previous");
 var companyUrlEl = document.querySelector(".website");
 var newsFeedEl = document.querySelector(".news-feed");
-var stockNewsEl = document.querySelector(".stockNews");
+var stockNewsEl = document.querySelector(".stock-news");
+
 
 var previousStockTickersEl = document.querySelector(".search-results");
 var addToWatchedEl = document.createElement("a");
@@ -49,7 +50,7 @@ var getRapidApiNews = function () {
         }
     ).then(function (response) {
         response.json().then(function (data) {
-            console.log("this is rapidApi: ", data.stories);
+            // console.log("this is rapidApi: ", data.stories);
             if (data.stories) {
                 for (var i = 0; i < 6; i++) {
                     var newsImage = data.stories[i].thumbnailImage;
@@ -79,22 +80,24 @@ var getRapidApiNews = function () {
     });
 };
 
-// TO DO: dynamically render dates based on user's input
+// function to get stock news
 var getNewsData = function (stockTicker) {
     var st = stockTicker;
     let now = moment();
-    //debugger;
+    // debugger;
     var mainDate = now.format("YYYY-MM-DD");
     //var mainDate = moment('today', 'YYYY-MM-DD');
     var oldDate = moment().subtract('days', 7).format('YYYY-MM-DD');
     var newsURL = "https://finnhub.io/api/v1/company-news?symbol=" + stockTicker + "&from=" + oldDate + "&to=" + mainDate + "&token=bufqlff48v6veg4jhmcg";
+
+    console.log(newsURL, oldDate, mainDate);
 
     fetch(newsURL)
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
                     //alert("successful");
-                    //console.log(data);
+                    console.log(data);
                     displayNewsData(data);
                 });
             } else {
@@ -214,6 +217,7 @@ getRapidApiNews();
 $(document).on("click", ".search-icon", function () {
     // getting the search value.
     var stockTicker = document.querySelector("#search").value;
+    console.log(stockTicker);
     getCompanyData(stockTicker);
 
     // add function for getting stock news
@@ -233,12 +237,12 @@ $(document).ready(function () {
 
 //display News Data
 var displayNewsData = function (data) {
-    //console.log(data);
 
     var results = data.list;
+
     //debugger;
     alert("successful");
-    debugger;
+
     stockNewsEl.innerHTML = "";
     if (data.length === 0) {
         stockNewsEl.textContent = "No data found.";
@@ -246,14 +250,20 @@ var displayNewsData = function (data) {
     }
     for (var i = 0; i < 4; i++) {
         var newsEl = document.createElement("div");
+        newsEl.classList = "row white";
+        // newsEl.classList = "card-image company-logo";
         //stockNewsEl.classList = "card-img-top";
-        newsEl.innerHTML = "<img class='responsiv-img' src='" + data[i].image + "' alt='news'><span class='card-title>" + data[i].headline + '</span>';
+        newsEl.innerHTML = "<div class='col s4 m4 l4'><img class='responsive-img' src='" + data[i].image + "' alt='news'></div>";
         //stockNewsEl.appendChild(newsEl);
-        //var stockNewsBodyEL =  document.createElement("div");
-        //stockNewsBodyEL.classList = "card-img-top";               
-        //var newsUrlEl = document.createElement("p");
-        //newsUrlEl.innerHTML = "<a href='" + data[i].url + "'>";
-        //newsEl.append(newsUrlEl);
         stockNewsEl.appendChild(newsEl);
+
+        var stockNewsUrlEl = document.createElement("div");
+        stockNewsUrlEl.classList = "col s8 m8 l8 white";
+        //newsEl.append(newsUrlEl);
+        // var newsUrlEl = document.createElement("p");
+        stockNewsUrlEl.innerHTML = "<p><a class='black-text' href='" + data[i].url + "'>" + data[i].headline + '</a></p>';
+        newsEl.appendChild(stockNewsUrlEl);
+
+
     }
 }
