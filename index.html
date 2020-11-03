@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <title>Project 1</title>
 </head>
 
@@ -17,23 +18,21 @@
       <i class="material-icons">menu</i>
     </a>
     <div class="row">
-      <div class="col s12 l2">
-       
+      <!-- <div class="col s12 l2"> -->
+        <div class="col s4">
         <!-- sidenav rendering --> 
-        <ul id="nav-mobile" class="sidenav sidenav-fixed">
-          <li id="search-stock" class="search">
-           
-              <div class="search-wrapper">
-                <input id="search" placeholder="search">
-                  <i class="material-icons search-icon">search</i>
-                    <div class="search-results"></div>
-                  </div>
-            </li>
-        </ul>
-      </div>
-    
-
-      <div class="col s4 push-s1">
+          <ul id="nav-mobile" class="sidenav sidenav-fixed">
+            <li id="search-stock" class="search">
+            
+                <div class="search-wrapper">
+                  <input id="search" placeholder="search">
+                    <i class="material-icons search-icon">search</i>
+                      <div class="search-results"></div>
+                    </div>
+              </li>
+          </ul>
+        </div>  
+      <div class="col s4">
         <div class="card stock-card">
           <!-- This will display the title bar for stock card, Logo, Name, URL -->
           <table class="responsive-table">
@@ -65,61 +64,18 @@
               </tbody>
             </table>
           </div>
-        </div>
       </div>
-
-      <!-- temporarily hard coding for testing -->
-      <!-- <div class="col s12 l4">
-        <div class="card stock-card">
-          <table class="responsive-table">
-            <thead>
-              <tr class="company-info green-text">
-                <th>
-                  <div class="card-image company-logo">
-                    <div class="card-image" id="image-2">
-                      <img src="https://static.finnhub.io/logo/87cb30d8-80df-11ea-8951-00000000092a.png"
-                        class="responsive-img" alt="" />
-                    </div>
-                </th>
-                <th>Apple Inc</th>
-                <th>AAPL</th>
-              </tr>
-            </thead>
-          </table>
-          <a class="btn-small btn-floating halfway-fab waves-effect waves-light red"><i
-              class="small material-icons">add</i></a>
-          <div class="card-content grey darken-4 white-text" id="content-2">
-            <table class="responsive-table">
-              <tbody>
-                <tr>
-                  <td>Current Price:</td>
-                  <td>116.60</td>
-                </tr>
-                <tr>
-                  <td>Previous Close Price:</td>
-                  <td>115.04</td>
-                </tr>
-                <tr class="website">
-                  <td>Company's website:</td>
-                  <td><a href="https://www.apple.com/">Apple Inc</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div> end of second card -->
-
-    </div> <!-- end of row -->
+      <div class="col s4">
+        <div class="card stockNews">
+            
+        </div>  
+      </div> 
+    </div> <!-- end of row -->    
     <div class="row">
-
       <div class="col s12 news-feed">
         <h4 class="text-float center  white-text blue darken-4">Market News</h4>
       </div>
     </div>
-  
-  </div>
-  </div>
-  </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="script.js"></script>
