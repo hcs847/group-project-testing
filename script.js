@@ -5,7 +5,7 @@ var stockCurrentEl = document.querySelector(".stock-current");
 var stockPreviousEl = document.querySelector(".stock-previous");
 var companyUrlEl = document.querySelector(".website");
 var newsFeedEl = document.querySelector(".news-feed");
-var stockNewsEl = document.querySelector("newsData");
+var stockNewsEl = document.querySelector(".stockNews");
 
 var previousStockTickersEl = document.querySelector(".search-results");
 var addToWatchedEl = document.createElement("a");
@@ -79,7 +79,7 @@ var getNewsData = function (stockTicker) {
     //var mainDate = moment('today', 'YYYY-MM-DD');
     var oldDate = moment().subtract('days', 7).format('YYYY-MM-DD');
     var newsURL = "https://finnhub.io/api/v1/company-news?symbol=" + stockTicker + "&from=" + oldDate + "&to=" + mainDate + "&token=bufqlff48v6veg4jhmcg";
-    alert (newsURL);
+    
     fetch(newsURL)
        .then(function(response) 
          {
@@ -233,15 +233,16 @@ $(document).ready(function () {
     $('.sidenav').sidenav();
 });
 
-//display 5 day forecast
+//display News Data
 var displayNewsData = function(data)
  {
     //console.log(data);
 
     var results = data.list;
     //debugger;
-    //alert("successful");
-    stockCardEl.innerHTML = "";
+    alert("successful");
+    debugger;
+    stockNewsEl.innerHTML = "";
     if (data.length === 0) 
     {
         stockNewsEl.textContent = "No data found.";
@@ -249,14 +250,15 @@ var displayNewsData = function(data)
     }
     for (var i = 0; i < 4; i++) 
     {
-    var stockNewsEl = document.createElement("div");
+    var newsEl = document.createElement("div");
                     //stockNewsEl.classList = "card-img-top";
-                    stockNewsEl.innerHTML = "<img class='responsiv-img' src='" + data[i].image + "' alt='news'><span class='card-title>" + data[i].headline + '</span>';
-                    stockCardEl.appendChild(stockNewsEl);
+        newsEl.innerHTML = "<img class='responsiv-img' src='" + data[i].image + "' alt='news'><span class='card-title>" + data[i].headline + '</span>';
+                    //stockNewsEl.appendChild(newsEl);
     //var stockNewsBodyEL =  document.createElement("div");
                     //stockNewsBodyEL.classList = "card-img-top";               
-                    var newsUrlEl = document.createElement("p");
-                    newsUrlEl.innerHTML = "<a href='" + data[i].url + "'>";
-                    stockCardEl.appendChild(newsUrlEl);
+                    //var newsUrlEl = document.createElement("p");
+                    //newsUrlEl.innerHTML = "<a href='" + data[i].url + "'>";
+                    //newsEl.append(newsUrlEl);
+                    stockNewsEl.appendChild(newsEl);
     }
  }
