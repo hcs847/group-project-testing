@@ -5,6 +5,8 @@ var stockCurrentEl = document.querySelector(".stock-current");
 var stockPreviousEl = document.querySelector(".stock-previous");
 var companyUrlEl = document.querySelector(".website");
 var newsFeedEl = document.querySelector(".news-feed");
+var stockNewsEl = document.querySelector(".stockNews");
+
 var previousStockTickersEl = document.querySelector(".search-results");
 var addToWatchedEl = document.createElement("a");
 
@@ -77,24 +79,32 @@ var getRapidApiNews = function () {
     });
 };
 
-// news Data
-var getNewsData = function () {
-    fetch(
-        "https://finnhub.io/api/v1/company-news?symbol=AMZN&from=2020-10-26&to=2020-10-26&source='https://www.forbes.com'&token=bubka1v48v6ouqkj675g"
-    ).then(function (response) {
-        response.json().then(function (data) {
-            console.log("Company News API call: ", data, data[0].headline);
-            var stockNewsEl = document.createElement("div");
-            stockNewsEl.classList = "card-image";
-            stockNewsEl.innerHTML =
-                "<img class='responsiv-img' src='" +
-                data[0].image +
-                "' alt='news'><span class='card-title>" +
-                data[0].headline +
-                "</span>";
-            stockCardEl.appendChild(stockNewsEl);
+// TO DO: dynamically render dates based on user's input
+var getNewsData = function (stockTicker) {
+    var st = stockTicker;
+    let now = moment();
+    //debugger;
+    var mainDate = now.format("YYYY-MM-DD");
+    //var mainDate = moment('today', 'YYYY-MM-DD');
+    var oldDate = moment().subtract('days', 7).format('YYYY-MM-DD');
+    var newsURL = "https://finnhub.io/api/v1/company-news?symbol=" + stockTicker + "&from=" + oldDate + "&to=" + mainDate + "&token=bufqlff48v6veg4jhmcg";
+
+    fetch(newsURL)
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(function (data) {
+                    //alert("successful");
+                    //console.log(data);
+                    displayNewsData(data);
+                });
+            } else {
+                alert("Error: " + response.statusText);
+            }
+        })
+        .catch(function (error) {
+            // Notice this `.catch()` getting chained onto the end of the `.then()` method
+            alert("Unable to connect to API");
         });
-    });
 };
 
 // function to fetch stock prices
@@ -206,6 +216,8 @@ $(document).on("click", ".search-icon", function () {
     var stockTicker = document.querySelector("#search").value;
     getCompanyData(stockTicker);
 
+    // add function for getting stock news
+    getNewsData(stockTicker);
 });
 
 // render stock clicked from previous searched side-nav
@@ -216,5 +228,32 @@ previousStockTickersEl.addEventListener("click", previousStockTickersHandler);
 
 // initliaze interactive elements for Materialize
 $(document).ready(function () {
-    $(".sidenav").sidenav();
+    $('.sidenav').sidenav();
 });
+
+//display News Data
+var displayNewsData = function (data) {
+    //console.log(data);
+
+    var results = data.list;
+    //debugger;
+    alert("successful");
+    debugger;
+    stockNewsEl.innerHTML = "";
+    if (data.length === 0) {
+        stockNewsEl.textContent = "No data found.";
+        return;
+    }
+    for (var i = 0; i < 4; i++) {
+        var newsEl = document.createElement("div");
+        //stockNewsEl.classList = "card-img-top";
+        newsEl.innerHTML = "<img class='responsiv-img' src='" + data[i].image + "' alt='news'><span class='card-title>" + data[i].headline + '</span>';
+        //stockNewsEl.appendChild(newsEl);
+        //var stockNewsBodyEL =  document.createElement("div");
+        //stockNewsBodyEL.classList = "card-img-top";               
+        //var newsUrlEl = document.createElement("p");
+        //newsUrlEl.innerHTML = "<a href='" + data[i].url + "'>";
+        //newsEl.append(newsUrlEl);
+        stockNewsEl.appendChild(newsEl);
+    }
+}
