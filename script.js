@@ -1,9 +1,11 @@
 // Element variable declartions
 var stockCardEl = document.querySelector(".stock-card");
-var companyInfoEl = document.querySelector(".company-info");
-var stockCurrentEl = document.querySelector(".stock-current");
-var stockPreviousEl = document.querySelector(".stock-previous");
-var companyUrlEl = document.querySelector(".website");
+var companyInfoEl = document.querySelector(".stock-info");
+var companyLogoEl = document.querySelector(".company-logo");
+
+var stockCurrentEl = document.querySelector(".current-price");
+var stockPreviousEl = document.querySelector(".previous-price");
+var companyUrlEl = document.querySelector(".website-url");
 var newsFeedEl = document.querySelector(".news-feed");
 var stockNewsEl = document.querySelector(".stock-news");
 
@@ -120,12 +122,12 @@ var getStockPrices = function (stockTicker) {
         response.json().then(function (data) {
 
             stockCurrentEl.innerHTML = "";
-            var currentPriceEl = document.createElement("td");
+            var currentPriceEl = document.createElement("p");
             currentPriceEl.textContent = Math.round(data.c * 100) / 100;
             stockCurrentEl.appendChild(currentPriceEl);
-            stockPreviousEl.innerHTML = "";
 
-            var previousPriceEl = document.createElement("td");
+            stockPreviousEl.innerHTML = "";
+            var previousPriceEl = document.createElement("p");
             previousPriceEl.textContent = Math.round(data.pc * 100) / 100;
             stockPreviousEl.appendChild(previousPriceEl);
         });
@@ -149,23 +151,28 @@ var getCompanyData = function (stockTicker) {
             companyUrlEl.innerHTML = "";
 
             // getting the company logo
-            var companyLogoEl = document.createElement("th");
-            companyLogoEl.setAttribute("class", "card-image company-logo");
+            var companyLogoEl = document.createElement("div");
+            companyLogoEl.setAttribute("class", "col s2 m2 l2 center-align");
+            var logoImage = document.createElement("div");
+            logoImage.setAttribute("class", "card-image company-logo");
             var logoImgEl = document.createElement("img");
             logoImgEl.setAttribute("src", data.logo);
             logoImgEl.setAttribute("class", "responsive-img");
             logoImgEl.setAttribute("alt", "logo");
-            companyLogoEl.append(logoImgEl);
+            logoImage.append(logoImgEl);
+            companyLogoEl.append(logoImage);
             companyInfoEl.appendChild(companyLogoEl);
 
             // Display Company Name
-            var nameEl = document.createElement("th");
-            nameEl.setAttribute("style", "text-align: center");
+            var nameEl = document.createElement("div");
+            nameEl.setAttribute("class", "col s7 m7 l7 center-align company-info blue-text text-darken-3");
             nameEl.textContent = data.name;
             companyInfoEl.appendChild(nameEl);
 
             //D isplay Stock Ticker
-            var symbolEl = document.createElement("th");
+            var symbolEl = document.createElement("div");
+            symbolEl.setAttribute("class", "col s3 m3 l3 center-align company-info blue-text text-darken-3");
+
             symbolEl.textContent = data.ticker;
             companyInfoEl.appendChild(symbolEl);
 
@@ -173,8 +180,8 @@ var getCompanyData = function (stockTicker) {
             getStockPrices(data.ticker);
 
             // Display Website URL
-            var webUrlEl = document.createElement("td");
-            webUrlEl.innerHTML = "<a href='" + data.weburl + "'>" + data.name;
+            var webUrlEl = document.createElement("pa");
+            webUrlEl.innerHTML = "<a href='" + data.weburl + "'>" + data.name + "</a>";
             companyUrlEl.appendChild(webUrlEl);
 
             // save stock ticker in local storage as per extracted from api not as typed
