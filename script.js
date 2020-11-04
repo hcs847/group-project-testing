@@ -2,6 +2,7 @@
 var stockCardEl = document.querySelector(".stock-card");
 var companyInfoEl = document.querySelector(".stock-info");
 var companyLogoEl = document.querySelector(".company-logo");
+var searchEl = document.querySelector("#search");
 
 var stockCurrentEl = document.querySelector(".current-price");
 var stockPreviousEl = document.querySelector(".previous-price");
@@ -96,7 +97,7 @@ var getNewsData = function (stockTicker) {
     // debugger;
     var mainDate = now.format("YYYY-MM-DD");
     //var mainDate = moment('today', 'YYYY-MM-DD');
-    var oldDate = moment().subtract("days", 7).format("YYYY-MM-DD");
+    var oldDate = moment().subtract("days", 14).format("YYYY-MM-DD");
     var newsURL =
         "https://finnhub.io/api/v1/company-news?symbol=" +
         stockTicker +
@@ -216,6 +217,9 @@ var getCompanyData = function (stockTicker) {
 
                 // save stock ticker in local storage as per extracted from api not as typed
                 storeStockTickers(data.ticker);
+
+                // clear the search input element
+                searchEl.value = "";
             }
         });
 };
@@ -263,6 +267,7 @@ $(document).on("click", ".search-icon", function () {
 
     // add function for getting stock news
     getNewsData(stockTicker);
+
 });
 // Event Listener for the search icon, when enter is pressed it  will run the getCompanyData function to display stock information.
 
@@ -275,6 +280,7 @@ $(document.querySelector("#search")).keypress(function (e) {
         getCompanyData(stockTicker);
         // add function for getting stock news
         getNewsData(stockTicker);
+
     }
 });
 // render stock clicked from previous searched side-nav
