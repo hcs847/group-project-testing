@@ -15,10 +15,11 @@ var addToWatchedEl = document.createElement("a");
 
 // getting data from localStorage or default values
 var stockTickers = JSON.parse(localStorage.getItem("stock-tickers")) || [];
-var stockTickersDefault = ["AAPL"];
+var stockTickersDefault = "AAPL";
 
 // rendering previously searched stock on side nav
 var displayPreviousStockTickers = function (stockTickers) {
+
     if (stockTickers.length <= 9) {
 
         var previousStockTickerUl = document.createElement("ul");
@@ -46,7 +47,6 @@ var storeStockTickers = function (stockTicker) {
         // call function to display previously searched
         displayPreviousStockTickers(stockTickers);
     }
-    // TO DO: add limit of 10 tickers
 };
 
 // fetching bloomberg market new end point through rapidapi to render at the bottom of the page
@@ -73,7 +73,6 @@ var getRapidApiNews = function () {
                         "<div class='col s4 m4 l4'><img src='" +
                         newsImage +
                         "' class='responsive-img'/></div>";
-
                     var newsTitleEl = document.createElement("div");
                     newsTitleEl.classList = "col s8 m8 l8 article-link";
                     newsTitleEl.innerHTML =
@@ -107,14 +106,14 @@ var getNewsData = function (stockTicker) {
         mainDate +
         "&token=bufqlff48v6veg4jhmcg";
 
-    console.log(newsURL, oldDate, mainDate);
+    // console.log(newsURL, oldDate, mainDate);
 
     fetch(newsURL)
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
                     //alert("successful");
-                    console.log(data);
+                    // console.log(data);
                     displayNewsData(data);
                 });
             } else {
@@ -225,17 +224,14 @@ var getCompanyData = function (stockTicker) {
 };
 
 // rendering stored list of stock tickers from local storage, starting with one value
-var renderStoredStockTickers = function (i = 0) {
+var renderStoredStockTickers = function () {
     if (stockTickers.length === 0) {
-        //for (var i = 0; i < stockTickersDefault.length; i++) {
-        getCompanyData(stockTickersDefault[i]);
-        getNewsData(stockTickersDefault[i]);
-        //}
+        getCompanyData(stockTickersDefault);
+        getNewsData(stockTickersDefault);
     } else {
-        //for (var i = 0; i < stockTickers.length; i++) {
-        getCompanyData(stockTickers[i]);
-        getNewsData(stockTickers[i]);
-        //}
+        // displaying last searched stock
+        getCompanyData(stockTickers[stockTickers.length - 1]);
+        getNewsData(stockTickers[stockTickers.length - 1]);
     }
 };
 
@@ -256,16 +252,16 @@ displayPreviousStockTickers(stockTickers);
 renderStoredStockTickers();
 
 // calling the news api to render market news in the footer -TEMPORARILY commenting out
-// ==============> temp commenting out=====> getRapidApiNews();
+getRapidApiNews();
 
 // Event Listener for the search icon, when clicked will run the getCompanyData function to display stock information.
 $(document).on("click", ".search-icon", function () {
     // getting the search value.
     var stockTicker = document.querySelector("#search").value;
-    console.log(stockTicker);
+    // console.log(stockTicker);
     getCompanyData(stockTicker);
 
-    // add function for getting stock news
+    // call function for getting stock news
     getNewsData(stockTicker);
 
 });
@@ -276,9 +272,8 @@ $(document.querySelector("#search")).keypress(function (e) {
         // code 13 is enter key in most browsers
         // getting the search value.
         var stockTicker = document.querySelector("#search").value;
-        console.log("this is from Enter Key: ", stockTicker);
         getCompanyData(stockTicker);
-        // add function for getting stock news
+        // call function for getting stock news
         getNewsData(stockTicker);
 
     }
