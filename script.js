@@ -253,7 +253,7 @@ var displayNewsData = function (data) {
     var results = data.list;
 
     //debugger;
-    alert("successful");
+    //alert("successful");
 
     stockNewsEl.innerHTML = "";
     if (data.length === 0) {
