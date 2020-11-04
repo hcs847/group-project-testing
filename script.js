@@ -246,7 +246,20 @@ $(document).on("click", ".search-icon", function () {
     // add function for getting stock news
     getNewsData(stockTicker);
 });
+// Event Listener for the search icon, when enter is pressed it  will run the getCompanyData function to display stock information.
 
+$(document.querySelector("#search")).keypress(function (e) { 
+    if (e.which == 13) { // code 13 is enter key in most browsers
+            // getting the search value. 
+        var stockTicker = document.querySelector("#search").value;
+        console.log("this is from Enter Key: ", stockTicker)
+        getCompanyData(stockTicker);
+        // add function for getting stock news
+        getNewsData(stockTicker); 
+
+    }
+    
+});
 // render stock clicked from previous searched side-nav
 previousStockTickersEl.addEventListener("click", previousStockTickersHandler);
 
