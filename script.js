@@ -1,53 +1,58 @@
 // Element variable declartions
-var stockCardEl = document.querySelector(".stock-card")
-var companyInfoEl = document.querySelector(".company-info");
-var stockCurrentEl = document.querySelector(".stock-current");
-var stockPreviousEl = document.querySelector(".stock-previous");
-var companyUrlEl = document.querySelector(".website");
+var stockCardEl = document.querySelector(".stock-card");
+var companyInfoEl = document.querySelector(".stock-info");
+var companyLogoEl = document.querySelector(".company-logo");
+
+var stockCurrentEl = document.querySelector(".current-price");
+var stockPreviousEl = document.querySelector(".previous-price");
+var companyUrlEl = document.querySelector(".website-url");
 var newsFeedEl = document.querySelector(".news-feed");
-var stockNewsEl = document.querySelector(".stockNews");
+var stockNewsEl = document.querySelector(".stock-news");
+
 
 var previousStockTickersEl = document.querySelector(".search-results");
 var addToWatchedEl = document.createElement("a");
 
 // getting data from localStorage or default values
 var stockTickers = JSON.parse(localStorage.getItem("stock-tickers")) || [];
-var stockTickersDefault = ['APPL'];
+var stockTickersDefault = ["AAPL"];
 
+// rendering previously searched stock on side nav
 var displayPreviousStockTickers = function (stockTickers) {
+    var previousStockTickerUl = document.createElement("ul");
     for (var i = 0; i < stockTickers.length; i++) {
-        var previousStockTicker = document.createElement("ul");
-        previousStockTicker.innerHTML = "<li>" + stockTickers[i] + "</li>";
-        previousStockTickersEl.appendChild(previousStockTicker);
+        var previousStockTickerLi = document.createElement("li");
+        previousStockTickerLi.innerHTML = '<a href="#">' + stockTickers[i] + "</a>";
+        previousStockTickersEl.appendChild(previousStockTickerUl);
+        previousStockTickerUl.appendChild(previousStockTickerLi);
     }
 };
 
-displayPreviousStockTickers(stockTickers);
-
+// saving searched stock into local storage
 var storeStockTickers = function (stockTicker) {
     if (!stockTickers.includes(stockTicker)) {
         stockTickers.push(stockTicker);
         localStorage.setItem("stock-tickers", JSON.stringify(stockTickers));
         previousStockTickersEl.textContent = "";
+        // call function to display previously searched
         displayPreviousStockTickers(stockTickers);
     }
     // TO DO: add limit of 10 tickers
 };
 
-
-
-
-// calling bloomberg market new end point through rapidapi to render at the botton of the page
+// fetching bloomberg market new end point through rapidapi to render at the bottom of the page
 var getRapidApiNews = function () {
-    fetch("https://bloomberg-market-and-financial-news.p.rapidapi.com/stories/list?template=STOCK&id=usdjpy", {
-        "method": "GET",
-        "headers": {
-            "x-rapidapi-host": "bloomberg-market-and-financial-news.p.rapidapi.com",
-            "x-rapidapi-key": "8a1f46e1d8msh570b0c0e9eeb024p19ee6bjsn73741d7971e8"
+    fetch(
+        "https://bloomberg-market-and-financial-news.p.rapidapi.com/stories/list?template=STOCK&id=usdjpy", {
+            method: "GET",
+            headers: {
+                "x-rapidapi-host": "bloomberg-market-and-financial-news.p.rapidapi.com",
+                "x-rapidapi-key": "8a1f46e1d8msh570b0c0e9eeb024p19ee6bjsn73741d7971e8",
+            },
         }
-    }).then(function (response) {
+    ).then(function (response) {
         response.json().then(function (data) {
-            console.log("this is rapidApi: ", data.stories);
+
             if (data.stories) {
                 for (var i = 0; i < 6; i++) {
                     var newsImage = data.stories[i].thumbnailImage;
@@ -55,210 +60,236 @@ var getRapidApiNews = function () {
                     var newsUrl = data.stories[i].shortURL;
 
                     var newsImageEl = document.createElement("div");
-                    newsImageEl.classList = "card-stacked small col s2";
-                    newsImageEl.innerHTML = "<div class='card-image article-image'><img src='" +
-                        newsImage + "' class='responsive-img'/></div>";
+                    newsImageEl.classList = "col s6 m6 l4";
+                    newsImageEl.innerHTML =
+                        "<div class='col s4 m4 l4'><img src='" +
+                        newsImage +
+                        "' class='responsive-img'/></div>";
 
                     var newsTitleEl = document.createElement("div");
-                    newsTitleEl.classList = "action-card article-link";
-                    newsTitleEl.innerHTML = "<a href='" + newsUrl + "' target='_blank'>" + newsHeadline + "</a>";
+                    newsTitleEl.classList = "col s8 m8 l8 article-link";
+                    newsTitleEl.innerHTML =
+                        "<a class='black-text' href='" +
+                        newsUrl +
+                        "' target='_blank'>" +
+                        newsHeadline +
+                        "</a>";
                     newsImageEl.appendChild(newsTitleEl);
                     newsFeedEl.appendChild(newsImageEl);
                 }
             }
-        })
-    })
-}
+        });
+    });
+};
 
-// TO DO: dynamically render dates based on user's input
+// function to get stock news
 var getNewsData = function (stockTicker) {
     var st = stockTicker;
     let now = moment();
-    //debugger;
+    // debugger;
     var mainDate = now.format("YYYY-MM-DD");
     //var mainDate = moment('today', 'YYYY-MM-DD');
     var oldDate = moment().subtract('days', 7).format('YYYY-MM-DD');
     var newsURL = "https://finnhub.io/api/v1/company-news?symbol=" + stockTicker + "&from=" + oldDate + "&to=" + mainDate + "&token=bufqlff48v6veg4jhmcg";
-    
+
+    console.log(newsURL, oldDate, mainDate);
+
     fetch(newsURL)
-       .then(function(response) 
-         {
-            if (response.ok) 
-           {
-            response.json().then(function(data){
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(function (data) {
                     //alert("successful");
-                //console.log(data);
-                displayNewsData(data);
+                    console.log(data);
+                    displayNewsData(data);
                 });
-           } 
-           else 
-           {
-               alert("Error: " + response.statusText);
-           }
-       })
-       .catch(function(error) 
-       {
-           // Notice this `.catch()` getting chained onto the end of the `.then()` method
-           alert("Unable to connect to API");
-       });             
+            } else {
+                alert("Error: " + response.statusText);
+            }
+        })
+        .catch(function (error) {
+            // Notice this `.catch()` getting chained onto the end of the `.then()` method
+            alert("Unable to connect to API");
+        });
 };
 
+// function to fetch stock prices
 var getStockPrices = function (stockTicker) {
-    fetch("https://finnhub.io/api/v1/quote?symbol=" + stockTicker + "&token=bubka1v48v6ouqkj675g").then(function (response) {
+    fetch(
+        "https://finnhub.io/api/v1/quote?symbol=" +
+        stockTicker +
+        "&token=bubka1v48v6ouqkj675g"
+    ).then(function (response) {
         response.json().then(function (data) {
-            // console.log("Stock Prices API call: ", data);
 
-            // move to a seperate function
             stockCurrentEl.innerHTML = "";
-            var currentPriceEl = document.createElement("td");
+            var currentPriceEl = document.createElement("p");
             currentPriceEl.textContent = Math.round(data.c * 100) / 100;
             stockCurrentEl.appendChild(currentPriceEl);
 
-            // move to a seperate function
             stockPreviousEl.innerHTML = "";
-
-            var previousPriceEl = document.createElement("td");
+            var previousPriceEl = document.createElement("p");
             previousPriceEl.textContent = Math.round(data.pc * 100) / 100;
             stockPreviousEl.appendChild(previousPriceEl);
-
-            // save stock ticker in local storage
-            storeStockTickers(stockTicker);
-
-        })
-    })
+        });
+    });
 };
 
 // This Function is called when search is clicked.
 // This is dynamically run with the value of the #search field elemnet
-
 var getCompanyData = function (stockTicker) {
-    fetch("https://finnhub.io/api/v1/stock/profile2?symbol=" + stockTicker + "&token=bubka1v48v6ouqkj675g")
+    fetch(
+            "https://finnhub.io/api/v1/stock/profile2?symbol=" +
+            stockTicker +
+            "&token=bubka1v48v6ouqkj675g"
+        )
         .then(function (stockResponse) {
             return stockResponse.json();
         })
         .then(function (data) {
             // initializing the innerHTMLs of all elements
-
-            // TEMPORARILY COMMENTING OUT
             companyInfoEl.innerHTML = "";
             companyUrlEl.innerHTML = "";
 
-            // button to add to favorite -- add event listner *******NICE TO HAVE add later***********
-            // addToWatchedEl.classList = "btn-small btn-floating halfway-fab waves-effect waves-light red";
-            // addToWatchedEl.innerHTML = "<i class ='small material-icons'>add</i>";
-            // stockCardEl.appendChild(addToWatchedEl);
-
-            //getting the company logo
-            var companyLogoEl = document.createElement("th")
-            companyLogoEl.setAttribute('class', 'card-image company-logo')
+            // getting the company logo
+            var companyLogoEl = document.createElement("div");
+            companyLogoEl.setAttribute("class", "col s2 m2 l2 center-align");
+            var logoImage = document.createElement("div");
+            logoImage.setAttribute("class", "card-image company-logo");
             var logoImgEl = document.createElement("img");
-            logoImgEl.setAttribute('src', data.logo);
-            logoImgEl.setAttribute('class', 'responsive-img');
-            logoImgEl.setAttribute('alt', 'logo');
-            companyLogoEl.append(logoImgEl);
+            logoImgEl.setAttribute("src", data.logo);
+            logoImgEl.setAttribute("class", "responsive-img");
+            logoImgEl.setAttribute("alt", "logo");
+            logoImage.append(logoImgEl);
+            companyLogoEl.append(logoImage);
             companyInfoEl.appendChild(companyLogoEl);
 
-            //Display Company Name
-            var nameEl = document.createElement("th");
-            nameEl.setAttribute('style', 'text-align: center')
+            // Display Company Name
+            var nameEl = document.createElement("div");
+            nameEl.setAttribute("class", "col s7 m7 l7 center-align company-info blue-text text-darken-3");
             nameEl.textContent = data.name;
             companyInfoEl.appendChild(nameEl);
 
-            //Display Stock Ticker
+            //D isplay Stock Ticker
+            var symbolEl = document.createElement("div");
+            symbolEl.setAttribute("class", "col s3 m3 l3 center-align company-info blue-text text-darken-3");
 
-            var symbolEl = document.createElement("th");
             symbolEl.textContent = data.ticker;
             companyInfoEl.appendChild(symbolEl);
 
-            //function to generate the current and Open price
-            getStockPrices(stockTicker);
+            // function to generate the current and Open price
+            getStockPrices(data.ticker);
 
-            // console.log(stockTicker);
-
-            //Display Website URL 
-            var webUrlEl = document.createElement("td");
-            webUrlEl.innerHTML = "<a href='" + data.weburl + "'>" + data.name;
+            // Display Website URL
+            var webUrlEl = document.createElement("p");
+            webUrlEl.innerHTML = "<a href='" + data.weburl + "' target='_blank'>" + data.name + "</a>";
             companyUrlEl.appendChild(webUrlEl);
-        })
+
+            // save stock ticker in local storage as per extracted from api not as typed
+            storeStockTickers(data.ticker);
+        });
 };
 
 // rendering stored list of stock tickers from local storage, starting with one value
 var renderStoredStockTickers = function (i = 0) {
-
     if (stockTickers.length === 0) {
         //for (var i = 0; i < stockTickersDefault.length; i++) {
         getCompanyData(stockTickersDefault[i]);
+        getNewsData(stockTickersDefault[i]);
         //}
     } else {
         //for (var i = 0; i < stockTickers.length; i++) {
-        getCompanyData(stockTickers[i])
+        getCompanyData(stockTickers[i]);
+        getNewsData(stockTickers[i]);
         //}
     }
-}
-
-renderStoredStockTickers();
+};
 
 var previousStockTickersHandler = function (event) {
     var stockTickerSelected = event.target.textContent;
+
+    // calling function to render previously searched tickers on click event
     getCompanyData(stockTickerSelected);
+
+    // calling the stock news function to render stock news
+    getNewsData(stockTickerSelected);
 };
 
-// Event Listener for the search icon, when clicked will run the getCompanyData function to display stock information.
+// calling function to display previously searched stock
+displayPreviousStockTickers(stockTickers);
 
-$(document).on('click', '.search-icon', function () {
-    // getting the search value. 
+// Calling function to render previously searched tickers on the side nav
+renderStoredStockTickers();
+
+// calling the news api to render market news in the footer
+getRapidApiNews();
+
+
+
+// Event Listener for the search icon, when clicked will run the getCompanyData function to display stock information.
+$(document).on("click", ".search-icon", function () {
+    // getting the search value.
     var stockTicker = document.querySelector("#search").value;
-    console.log("this is from click: ", stockTicker)
+    console.log(stockTicker);
     getCompanyData(stockTicker);
 
     // add function for getting stock news
-    getNewsData(stockTicker); 
+    getNewsData(stockTicker);
 });
 
 // render stock clicked from previous searched side-nav
 previousStockTickersEl.addEventListener("click", previousStockTickersHandler);
 
-
-// This shows up as default on the page before the page is cleared to have a search result. 
+// This shows up as default on the page before the page is cleared to have a search result.
 //getCompanyData('AAPL');
-// getCompanyData('AMZN');
-// getCompanyData('TSLA');
-// getNewsData(); 
 
-getRapidApiNews();
-
-
-// initliaze interactive elements materialize
+// initliaze interactive elements for Materialize
 $(document).ready(function () {
     $('.sidenav').sidenav();
 });
 
 //display News Data
-var displayNewsData = function(data)
- {
-    //console.log(data);
+var displayNewsData = function (data) {
 
     var results = data.list;
+
     //debugger;
     alert("successful");
-    debugger;
+
     stockNewsEl.innerHTML = "";
-    if (data.length === 0) 
-    {
+    if (data.length === 0) {
         stockNewsEl.textContent = "No data found.";
         return;
     }
-    for (var i = 0; i < 4; i++) 
-    {
-    var newsEl = document.createElement("div");
-                    //stockNewsEl.classList = "card-img-top";
-        newsEl.innerHTML = "<img class='responsiv-img' src='" + data[i].image + "' alt='news'><span class='card-title>" + data[i].headline + '</span>';
-                    //stockNewsEl.appendChild(newsEl);
-    //var stockNewsBodyEL =  document.createElement("div");
-                    //stockNewsBodyEL.classList = "card-img-top";               
-                    //var newsUrlEl = document.createElement("p");
-                    //newsUrlEl.innerHTML = "<a href='" + data[i].url + "'>";
-                    //newsEl.append(newsUrlEl);
-                    stockNewsEl.appendChild(newsEl);
+
+    // filter results to including images
+    var filteredData = data.filter(function (article) {
+        return article.image;
+    });
+
+    // rendering stock news title
+    var newsTitleEl = document.createElement("div");
+    newsTitleEl.classList = "row";
+    newsTitleEl.innerHTML = "<div class='col s12 m12 l12 white-text blue-grey darken-4 stock-news-title center'><h4>Stock News</h4></div>";
+    stockNewsEl.appendChild(newsTitleEl);
+
+    for (var i = 0; i < 4; i++) {
+        // checking if image is available
+
+        var newsEl = document.createElement("div");
+        newsEl.classList = "row";
+        // newsEl.classList = "card-image company-logo";
+        //stockNewsEl.classList = "card-img-top";
+        newsEl.innerHTML = "<div class='col s4 m4 l4 article-image'><img class='responsive-img' src='" + filteredData[i].image + "' alt='news'></div>";
+        //stockNewsEl.appendChild(newsEl);
+        stockNewsEl.appendChild(newsEl);
+
+        var stockNewsUrlEl = document.createElement("div");
+        stockNewsUrlEl.classList = "col s8 m8 l8 white";
+        //newsEl.append(newsUrlEl);
+        // var newsUrlEl = document.createElement("p");
+        stockNewsUrlEl.innerHTML = "<p class='article-link'><a href='" + filteredData[i].url + "' target='_blank'>" + filteredData[i].headline + '</a></p>';
+        newsEl.appendChild(stockNewsUrlEl);
+
+
     }
- }
+}
