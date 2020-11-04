@@ -268,15 +268,15 @@ var displayNewsData = function (data) {
 
     // rendering stock news title
     var newsTitleEl = document.createElement("div");
-    newsTitleEl.classList = "col s12 m12 l12 white-text blue-grey darken-4 stock-news-title center";
-    newsTitleEl.innerHTML = "<h4>Stock News</h4>";
+    newsTitleEl.classList = "row";
+    newsTitleEl.innerHTML = "<div class='col s12 m12 l12 white-text blue-grey darken-4 stock-news-title center'><h4>Stock News</h4></div>";
     stockNewsEl.appendChild(newsTitleEl);
 
     for (var i = 0; i < 4; i++) {
         // checking if image is available
 
         var newsEl = document.createElement("div");
-        newsEl.classList = "row white";
+        newsEl.classList = "row";
         // newsEl.classList = "card-image company-logo";
         //stockNewsEl.classList = "card-img-top";
         newsEl.innerHTML = "<div class='col s4 m4 l4 article-image'><img class='responsive-img' src='" + filteredData[i].image + "' alt='news'></div>";
