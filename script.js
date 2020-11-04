@@ -146,46 +146,57 @@ var getCompanyData = function (stockTicker) {
             return stockResponse.json();
         })
         .then(function (data) {
-            // initializing the innerHTMLs of all elements
-            companyInfoEl.innerHTML = "";
-            companyUrlEl.innerHTML = "";
+            if (data.name ==undefined || data.name == null|| data.name== "" ){
+                console.log("data is empty")
+                $('#error-msg').empty();
+                var errorMsg = $('#error-msg')
+                var displayError = document.createElement('p');
+                displayError.setAttribute('style','color:red');
+                displayError.innerHTML = "Please enter a valid Stock Ticker";
+                errorMsg.append(displayError);
+            }else{
+                // initializing the innerHTMLs of all elements
+                companyInfoEl.innerHTML = "";
+                companyUrlEl.innerHTML = "";
+                $('#error-msg').empty();
 
-            // getting the company logo
-            var companyLogoEl = document.createElement("div");
-            companyLogoEl.setAttribute("class", "col s2 m2 l2 center-align");
-            var logoImage = document.createElement("div");
-            logoImage.setAttribute("class", "card-image company-logo");
-            var logoImgEl = document.createElement("img");
-            logoImgEl.setAttribute("src", data.logo);
-            logoImgEl.setAttribute("class", "responsive-img");
-            logoImgEl.setAttribute("alt", "logo");
-            logoImage.append(logoImgEl);
-            companyLogoEl.append(logoImage);
-            companyInfoEl.appendChild(companyLogoEl);
+                // getting the company logo
+                var companyLogoEl = document.createElement("div");
+                companyLogoEl.setAttribute("class", "col s2 m2 l2 center-align");
+                var logoImage = document.createElement("div");
+                logoImage.setAttribute("class", "card-image company-logo");
+                var logoImgEl = document.createElement("img");
+                logoImgEl.setAttribute("src", data.logo);
+                logoImgEl.setAttribute("class", "responsive-img");
+                logoImgEl.setAttribute("alt", "logo");
+                logoImage.append(logoImgEl);
+                companyLogoEl.append(logoImage);
+                companyInfoEl.appendChild(companyLogoEl);
 
-            // Display Company Name
-            var nameEl = document.createElement("div");
-            nameEl.setAttribute("class", "col s7 m7 l7 center-align company-info blue-text text-darken-3");
-            nameEl.textContent = data.name;
-            companyInfoEl.appendChild(nameEl);
+                // Display Company Name
+                var nameEl = document.createElement("div");
+                nameEl.setAttribute("class", "col s7 m7 l7 center-align company-info blue-text text-darken-3");
+                nameEl.textContent = data.name;
+                companyInfoEl.appendChild(nameEl);
 
-            //D isplay Stock Ticker
-            var symbolEl = document.createElement("div");
-            symbolEl.setAttribute("class", "col s3 m3 l3 center-align company-info blue-text text-darken-3");
+                //D isplay Stock Ticker
+                var symbolEl = document.createElement("div");
+                symbolEl.setAttribute("class", "col s3 m3 l3 center-align company-info blue-text text-darken-3");
 
-            symbolEl.textContent = data.ticker;
-            companyInfoEl.appendChild(symbolEl);
+                symbolEl.textContent = data.ticker;
+                companyInfoEl.appendChild(symbolEl);
 
-            // function to generate the current and Open price
-            getStockPrices(data.ticker);
+                // function to generate the current and Open price
+                getStockPrices(data.ticker);
 
-            // Display Website URL
-            var webUrlEl = document.createElement("p");
-            webUrlEl.innerHTML = "<a href='" + data.weburl + "' target='_blank'>" + data.name + "</a>";
-            companyUrlEl.appendChild(webUrlEl);
+                // Display Website URL
+                var webUrlEl = document.createElement("p");
+                webUrlEl.innerHTML = "<a href='" + data.weburl + "' target='_blank'>" + data.name + "</a>";
+                companyUrlEl.appendChild(webUrlEl);
 
-            // save stock ticker in local storage as per extracted from api not as typed
-            storeStockTickers(data.ticker);
+                // save stock ticker in local storage as per extracted from api not as typed
+                storeStockTickers(data.ticker);
+            }
         });
 };
 
@@ -235,7 +246,20 @@ $(document).on("click", ".search-icon", function () {
     // add function for getting stock news
     getNewsData(stockTicker);
 });
+// Event Listener for the search icon, when enter is pressed it  will run the getCompanyData function to display stock information.
 
+$(document.querySelector("#search")).keypress(function (e) { 
+    if (e.which == 13) { // code 13 is enter key in most browsers
+            // getting the search value. 
+        var stockTicker = document.querySelector("#search").value;
+        console.log("this is from Enter Key: ", stockTicker)
+        getCompanyData(stockTicker);
+        // add function for getting stock news
+        getNewsData(stockTicker); 
+
+    }
+    
+});
 // render stock clicked from previous searched side-nav
 previousStockTickersEl.addEventListener("click", previousStockTickersHandler);
 
@@ -252,9 +276,12 @@ var displayNewsData = function (data) {
 
     var results = data.list;
 
+<<<<<<< HEAD
     //debugger;
     //alert("successful");
 
+=======
+>>>>>>> main
     stockNewsEl.innerHTML = "";
     if (data.length === 0) {
         stockNewsEl.textContent = "No data found.";
@@ -289,7 +316,5 @@ var displayNewsData = function (data) {
         // var newsUrlEl = document.createElement("p");
         stockNewsUrlEl.innerHTML = "<p class='article-link'><a href='" + filteredData[i].url + "' target='_blank'>" + filteredData[i].headline + '</a></p>';
         newsEl.appendChild(stockNewsUrlEl);
-
-
     }
 }
