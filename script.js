@@ -3,13 +3,11 @@ var stockCardEl = document.querySelector(".stock-card");
 var companyInfoEl = document.querySelector(".stock-info");
 var companyLogoEl = document.querySelector(".company-logo");
 var searchEl = document.querySelector("#search");
-
 var stockCurrentEl = document.querySelector(".current-price");
 var stockPreviousEl = document.querySelector(".previous-price");
 var companyUrlEl = document.querySelector(".website-url");
 var newsFeedEl = document.querySelector(".news-feed");
 var stockNewsEl = document.querySelector(".stock-news");
-
 var previousStockTickersEl = document.querySelector(".search-results");
 var addToWatchedEl = document.createElement("a");
 
@@ -195,7 +193,7 @@ var getCompanyData = function (stockTicker) {
                 nameEl.textContent = data.name;
                 companyInfoEl.appendChild(nameEl);
 
-                //D isplay Stock Ticker
+                // Display Stock Ticker
                 var symbolEl = document.createElement("div");
                 symbolEl.setAttribute(
                     "class",
@@ -299,7 +297,7 @@ var displayNewsData = function (data) {
         return;
     }
 
-    // filter results to including images
+    // filter results to articles including images
     var filteredData = data.filter(function (article) {
         return article.image;
     });
@@ -312,23 +310,16 @@ var displayNewsData = function (data) {
     stockNewsEl.appendChild(newsTitleEl);
 
     for (var i = 0; i < 4; i++) {
-        // checking if image is available
-
         var newsEl = document.createElement("div");
         newsEl.classList = "row";
-        // newsEl.classList = "card-image company-logo";
-        //stockNewsEl.classList = "card-img-top";
         newsEl.innerHTML =
             "<div class='col s4 m4 l4 article-image'><img class='responsive-img' src='" +
             filteredData[i].image +
             "' alt='news'></div>";
-        //stockNewsEl.appendChild(newsEl);
         stockNewsEl.appendChild(newsEl);
 
         var stockNewsUrlEl = document.createElement("div");
         stockNewsUrlEl.classList = "col s8 m8 l8 white";
-        //newsEl.append(newsUrlEl);
-        // var newsUrlEl = document.createElement("p");
         stockNewsUrlEl.innerHTML =
             "<p class='article-link'><a href='" +
             filteredData[i].url +
