@@ -69,6 +69,7 @@
 #nav-mobile {
   cursor: pointer;
   width: 200px;
+  font-size: 14.5px;
 }
 
 #search {
@@ -76,6 +77,13 @@
   border: none;
   padding: 0 2%;
 }
+
+/* remove underline of search input on focus */
+#search:focus {
+  border-bottom: none;
+  box-shadow: none;
+}
+
 
 .search-wrapper {
   border: 1px solid #1565c0;
