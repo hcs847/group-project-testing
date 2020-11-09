@@ -20,8 +20,8 @@ Our goal is to simplify investing news in order to get more people to start inve
 * Moment.js
 
 ## Apis used:
-* Finnahub
-* Bloomberg
+* Finnhub (https://finnhub.io/api/v1)
+* Bloomberg (https://bloomberg-market-and-financial-news.p.rapidapi.com/)
 
 ## Demo
 ![](./assets/images/Money_Maker_Pays_to_Know.gif)
