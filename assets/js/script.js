@@ -106,12 +106,14 @@ var getNewsData = function (stockTicker) {
           displayNewsData(data);
         });
       } else {
-        alert("Error: " + response.statusText);
+        //alert("Error: " + response.statusText);
+        console.log("Error: " + response.statusText);
       }
     })
     .catch(function (error) {
       // Notice this `.catch()` getting chained onto the end of the `.then()` method
-      alert("Unable to connect to API");
+      //alert("Unable to connect to API");
+      console.log("Unable to connect to API");
     });
 };
 
