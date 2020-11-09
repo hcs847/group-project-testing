@@ -243,7 +243,7 @@ displayPreviousStockTickers(stockTickers);
 renderStoredStockTickers();
 
 // calling the news api to render market news in the footer
-// temp commenting out =======>  getRapidApiNews();
+getRapidApiNews();
 
 // Event Listener for the search icon, when clicked will run the getCompanyData function to display stock information.
 $(document).on("click", ".search-icon", function () {
