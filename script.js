@@ -8,6 +8,7 @@ var stockPreviousEl = document.querySelector(".previous-price");
 var companyUrlEl = document.querySelector(".website-url");
 var newsFeedEl = document.querySelector(".news-feed");
 var stockNewsEl = document.querySelector(".stock-news");
+var BLOCK_STOCK_NEWS = 4;
 
 
 var previousStockTickersEl = document.querySelector(".search-results");
@@ -41,13 +42,16 @@ var storeStockTickers = function (stockTicker) {
 };
 
 // fetching bloomberg market new end point through rapidapi to render at the bottom of the page
+// 5c8fbc5672msh858d81bcc9a0d96p1f4f1bjsndfd3f3787929 - AC
+// 5c8fbc5672msh858d81bcc9a0d96p1f4f1bjsndfd3f3787929
+// 8a1f46e1d8msh570b0c0e9eeb024p19ee6bjsn73741d7971e8 - Hilla
 var getRapidApiNews = function () {
     fetch(
         "https://bloomberg-market-and-financial-news.p.rapidapi.com/stories/list?template=STOCK&id=usdjpy", {
             method: "GET",
             headers: {
                 "x-rapidapi-host": "bloomberg-market-and-financial-news.p.rapidapi.com",
-                "x-rapidapi-key": "8a1f46e1d8msh570b0c0e9eeb024p19ee6bjsn73741d7971e8",
+                "x-rapidapi-key": "5c8fbc5672msh858d81bcc9a0d96p1f4f1bjsndfd3f3787929",
             },
         }
     ).then(function (response) {
@@ -98,17 +102,17 @@ var getNewsData = function (stockTicker) {
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
-                    //alert("successful");
                     console.log(data);
                     displayNewsData(data);
                 });
             } else {
-                alert("Error: " + response.statusText);
+                console.log("Error: " + response.statusText);
             }
         })
-        .catch(function (error) {
+        .catch(function (error) 
+        {
             // Notice this `.catch()` getting chained onto the end of the `.then()` method
-            alert("Unable to connect to API");
+            console.log("Unable to connect to API");
         });
 };
 
@@ -252,12 +256,10 @@ var displayNewsData = function (data) {
 
     var results = data.list;
 
-    //debugger;
-    alert("successful");
-
     stockNewsEl.innerHTML = "";
     if (data.length === 0) {
-        stockNewsEl.textContent = "No data found.";
+        //stockNewsEl.textContent = "No data found.";
+        console.log("No data found.");
         return;
     }
 
@@ -272,21 +274,19 @@ var displayNewsData = function (data) {
     newsTitleEl.innerHTML = "<div class='col s12 m12 l12 white-text blue-grey darken-4 stock-news-title center'><h4>Stock News</h4></div>";
     stockNewsEl.appendChild(newsTitleEl);
 
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < BLOCK_STOCK_NEWS; i++) {
         // checking if image is available
 
         var newsEl = document.createElement("div");
         newsEl.classList = "row";
-        // newsEl.classList = "card-image company-logo";
-        //stockNewsEl.classList = "card-img-top";
+
         newsEl.innerHTML = "<div class='col s4 m4 l4 article-image'><img class='responsive-img' src='" + filteredData[i].image + "' alt='news'></div>";
-        //stockNewsEl.appendChild(newsEl);
+
         stockNewsEl.appendChild(newsEl);
 
         var stockNewsUrlEl = document.createElement("div");
         stockNewsUrlEl.classList = "col s8 m8 l8 white";
-        //newsEl.append(newsUrlEl);
-        // var newsUrlEl = document.createElement("p");
+ 
         stockNewsUrlEl.innerHTML = "<p class='article-link'><a href='" + filteredData[i].url + "' target='_blank'>" + filteredData[i].headline + '</a></p>';
         newsEl.appendChild(stockNewsUrlEl);
 
