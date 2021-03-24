@@ -1,3 +1,7 @@
+// API keys variables
+var finHubKey = config.finHubToken;
+var rapidApiKey = config.rapidApiKey;
+
 // Element variable declartions
 var companyInfoEl = document.querySelector(".stock-info");
 var companyLogoEl = document.querySelector(".company-logo");
@@ -11,7 +15,7 @@ var previousStockTickersEl = document.querySelector(".search-results");
 
 // getting data from localStorage or default values
 var stockTickers = JSON.parse(localStorage.getItem("stock-tickers")) || [];
-var stockTickersDefault = "AAPL";
+var stockTickersDefault = "ZM";
 
 // rendering previously searched stock on side nav
 var displayPreviousStockTickers = function (stockTickers) {
@@ -48,12 +52,12 @@ var storeStockTickers = function (stockTicker) {
 var getRapidApiNews = function () {
   fetch(
     "https://bloomberg-market-and-financial-news.p.rapidapi.com/stories/list?template=STOCK&id=usdjpy", {
-      method: "GET",
-      headers: {
-        "x-rapidapi-host": "bloomberg-market-and-financial-news.p.rapidapi.com",
-        "x-rapidapi-key": "5c8fbc5672msh858d81bcc9a0d96p1f4f1bjsndfd3f3787929",
-      },
-    }
+    method: "GET",
+    headers: {
+      "x-rapidapi-host": "bloomberg-market-and-financial-news.p.rapidapi.com",
+      "x-rapidapi-key": rapidApiKey,
+    },
+  }
   ).then(function (response) {
     response.json().then(function (data) {
       if (data.stories) {
@@ -97,7 +101,8 @@ var getNewsData = function (stockTicker) {
     oldDate +
     "&to=" +
     mainDate +
-    "&token=bufqlff48v6veg4jhmcg";
+    "&token=" +
+    finHubKey;
 
   fetch(newsURL)
     .then(function (response) {
@@ -122,7 +127,8 @@ var getStockPrices = function (stockTicker) {
   fetch(
     "https://finnhub.io/api/v1/quote?symbol=" +
     stockTicker +
-    "&token=bubka1v48v6ouqkj675g"
+    "&token=" +
+    finHubKey
   ).then(function (response) {
     response.json().then(function (data) {
       stockCurrentEl.innerHTML = "";
@@ -142,10 +148,11 @@ var getStockPrices = function (stockTicker) {
 // This is dynamically run with the value of the #search field elemnet
 var getCompanyData = function (stockTicker) {
   fetch(
-      "https://finnhub.io/api/v1/stock/profile2?symbol=" +
-      stockTicker +
-      "&token=bubka1v48v6ouqkj675g"
-    )
+    "https://finnhub.io/api/v1/stock/profile2?symbol=" +
+    stockTicker +
+    "&token=" +
+    finHubKey
+  )
     .then(function (stockResponse) {
       return stockResponse.json();
     })

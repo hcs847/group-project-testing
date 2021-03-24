@@ -2,13 +2,19 @@
   box-sizing: border-box;
 }
 
-
+.background-img {
+  background-image: url('../images/money-maker-new.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 .nav-wrapper {
   margin-bottom: 1rem;
 }
 
 .top-banner {
   border-bottom: #1565c0 solid 3px;
+  width: calc(100% - 200px);
+  margin-left: auto;
 }
 
 .main-header {
@@ -121,6 +127,9 @@ footer {
   padding-left: 200px;
 }
 
+.sidenav {
+  background-color: rgba(255,255,255,0.75);
+}
 
 /* offsetting sidenav fixed width */
 @media only screen and (max-width: 992px) {
